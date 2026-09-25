@@ -1,170 +1,341 @@
-import { useParams, useNavigate } from "react-router-dom";
-
-const pujas = [
-  { id: 1, name: "Ganesh Puja", price: 5100 },
-  { id: 2, name: "Satyanarayan Puja", price: 6100 },
-  { id: 3, name: "Griha Pravesh Puja", price: 5100 },
-  { id: 4, name: "Mahamrityunjaya Jaap", price: 5100 },
-  { id: 5, name: "Maha Mrityunjaya Havan", price: 5100 },
-  { id: 6, name: "Navagraha Havan", price: 5100 },
-  { id: 7, name: "Hanuman Puja", price: 5100 },
-  { id: 8, name: "Diwali Puja", price: 7100 },
-  { id: 9, name: "Durga Puja", price: 5100 },
-  { id: 10, name: "Navratri Puja", price: 7100 },
-  { id: 11, name: "Shiv Puja", price: 5100 },
-  { id: 12, name: "Rudrabhishek", price: 5100 },
-  { id: 13, name: "Shivling Abhishek", price: 5100 },
-  { id: 14, name: "Vastu Shanti Puja", price: 5100 },
-  { id: 15, name: "Navagraha Shanti", price: 5100 },
-];
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Payment() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const puja = pujas.find((item) => item.id === Number(id));
+  const [bookingData, setBookingData] = useState(null);
+  const [utr, setUtr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  if (!puja) {
+  useEffect(() => {
+    const savedBooking =
+      localStorage.getItem("pujaBooking");
+
+    if (!savedBooking) {
+      setError(
+        "Booking information not found. Please start again."
+      );
+      return;
+    }
+
+    try {
+      const parsedBooking =
+        JSON.parse(savedBooking);
+
+      setBookingData(parsedBooking);
+    } catch (error) {
+      console.error(
+        "Failed to read booking data:",
+        error
+      );
+
+      setError(
+        "Booking information is invalid. Please start again."
+      );
+    }
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setError("");
+
+    if (!utr.trim()) {
+      setError(
+        "Please enter your UTR / Transaction ID."
+      );
+      return;
+    }
+
+    if (!bookingData) {
+      setError(
+        "Booking information not found."
+      );
+      return;
+    }
+
+    const bookingId =
+      bookingData.bookingId;
+
+    if (!bookingId) {
+      setError(
+        "Booking ID not found. Please start the booking again."
+      );
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        `http://localhost:5000/api/bookings/${bookingId}/payment`,
+        {
+          method: "PATCH",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            utr: utr.trim(),
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      console.log(
+        "Payment response:",
+        data
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            "Failed to submit payment."
+        );
+      }
+
+      const updatedBooking = {
+        ...bookingData,
+
+        utr: utr.trim(),
+
+        paymentStatus:
+          data.booking?.paymentStatus ||
+          "PENDING",
+
+        bookingStatus:
+          data.booking?.bookingStatus ||
+          "PENDING",
+      };
+
+      localStorage.setItem(
+        "pujaBooking",
+        JSON.stringify(updatedBooking)
+      );
+
+      navigate(
+        `/booking/${id}/confirmation`
+      );
+    } catch (error) {
+      console.error(
+        "Payment submission error:",
+        error
+      );
+
+      setError(
+        error.message ||
+          "Unable to submit payment. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!bookingData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-orange-50">
-        <h1 className="text-2xl font-bold text-red-600">
-          Puja not found
-        </h1>
+      <div className="flex min-h-screen items-center justify-center bg-orange-50 px-6">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+
+          <div className="text-5xl">
+            ⚠️
+          </div>
+
+          <h1 className="mt-4 text-2xl font-bold text-red-600">
+            Booking Information Not Found
+          </h1>
+
+          <p className="mt-3 text-gray-600">
+            {error ||
+              "Please start your booking again."}
+          </p>
+
+          <button
+            onClick={() =>
+              navigate("/pujas")
+            }
+            className="mt-6 rounded-lg bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700"
+          >
+            View Pujas
+          </button>
+
+        </div>
       </div>
     );
   }
 
-  const handlePayment = () => {
-    alert("Payment gateway will be connected in the next step.");
-  };
-
   return (
     <div className="min-h-screen bg-orange-50 px-6 py-12">
-      <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-lg">
+
+      <div className="mx-auto max-w-2xl rounded-2xl bg-white p-8 shadow-lg">
+
+        {/* HEADER */}
 
         <div className="text-center">
-          <div className="text-5xl">💳</div>
+
+          <div className="text-5xl">
+            💳
+          </div>
 
           <h1 className="mt-4 text-3xl font-bold text-orange-800">
             Payment
           </h1>
 
           <p className="mt-3 text-gray-600">
-            Review your booking and complete the payment.
+            Complete your payment and submit
+            the transaction ID.
           </p>
+
         </div>
 
-        <div className="mt-8 rounded-xl border border-orange-200 bg-orange-50 p-6">
+        {/* BOOKING SUMMARY */}
 
-          <h2 className="text-xl font-bold text-gray-800">
+        <div className="mt-8 rounded-xl bg-orange-50 p-5">
+
+          <p className="text-sm text-gray-500">
             Booking Summary
-          </h2>
+          </p>
 
-          <div className="mt-5 space-y-4">
+          <div className="mt-3 space-y-3">
 
-            <div className="flex justify-between border-b pb-3">
+            <div className="flex justify-between gap-4">
               <span className="text-gray-600">
                 Puja
               </span>
 
               <span className="font-semibold text-gray-800">
-                {puja.name}
+                {bookingData.pujaName}
               </span>
             </div>
 
-            <div className="flex justify-between border-b pb-3">
+            <div className="flex justify-between gap-4">
               <span className="text-gray-600">
-                Booking Status
+                Date
               </span>
 
-              <span className="font-semibold text-orange-600">
-                Pending Payment
+              <span className="font-semibold text-gray-800">
+                {bookingData.date}
               </span>
             </div>
 
-            <div className="flex justify-between pt-2">
-              <span className="text-lg font-semibold text-gray-700">
+            <div className="flex justify-between gap-4">
+              <span className="text-gray-600">
+                Time
+              </span>
+
+              <span className="font-semibold text-gray-800">
+                {bookingData.time}
+              </span>
+            </div>
+
+            <div className="flex justify-between gap-4 border-t pt-3">
+
+              <span className="font-semibold text-gray-700">
                 Total Amount
               </span>
 
-              <span className="text-2xl font-bold text-orange-600">
-                ₹{puja.price}
+              <span className="text-xl font-bold text-orange-600">
+                ₹{bookingData.price}
               </span>
+
             </div>
 
           </div>
+
         </div>
 
-        <div className="mt-8">
+        {/* PAYMENT INSTRUCTIONS */}
 
-          <h2 className="text-xl font-bold text-gray-800">
-            Payment Method
+        <div className="mt-8 rounded-xl border border-orange-200 bg-orange-50 p-5">
+
+          <h2 className="text-lg font-bold text-orange-800">
+            Payment Instructions
           </h2>
 
-          <div className="mt-4 rounded-xl border border-gray-200 p-5">
-            <label className="flex cursor-pointer items-center gap-4">
+          <p className="mt-3 text-gray-700">
+            Please complete the payment using
+            the payment method provided by
+            PujaBooking.
+          </p>
 
-              <input
-                type="radio"
-                name="payment"
-                value="online"
-                defaultChecked
-              />
+          <div className="mt-4 rounded-lg bg-white p-4">
 
-              <div>
-                <p className="font-semibold text-gray-800">
-                  💳 Online Payment
-                </p>
+            <p className="text-sm text-gray-500">
+              Amount to Pay
+            </p>
 
-                <p className="mt-1 text-sm text-gray-500">
-                  UPI, Debit Card, Credit Card & Net Banking
-                </p>
-              </div>
+            <p className="mt-1 text-2xl font-bold text-orange-600">
+              ₹{bookingData.price}
+            </p>
 
+          </div>
+
+          <p className="mt-4 text-sm text-gray-600">
+            After completing the payment,
+            enter the UTR / Transaction ID below.
+          </p>
+
+        </div>
+
+        {/* PAYMENT FORM */}
+
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8"
+        >
+
+          <div>
+
+            <label className="block font-semibold text-gray-700">
+              UTR / Transaction ID
             </label>
+
+            <input
+              type="text"
+              value={utr}
+              onChange={(event) => {
+                setUtr(event.target.value);
+                setError("");
+              }}
+              placeholder="Enter your UTR / Transaction ID"
+              autoComplete="off"
+              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+            />
+
+            <p className="mt-2 text-sm text-gray-500">
+              This will be used to verify your payment.
+            </p>
+
           </div>
 
-        </div>
+          {/* ERROR */}
 
-        <div className="mt-8 rounded-xl bg-gray-50 p-5">
+          {error && (
+            <div className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-600">
+              {error}
+            </div>
+          )}
 
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">
-              Puja Amount
-            </span>
+          {/* SUBMIT */}
 
-            <span className="font-semibold">
-              ₹{puja.price}
-            </span>
-          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-8 w-full rounded-lg bg-orange-600 px-6 py-3 font-semibold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading
+              ? "Submitting Payment..."
+              : "Submit Payment"}
+          </button>
 
-          <div className="mt-3 flex items-center justify-between border-t pt-3">
-            <span className="text-lg font-bold text-gray-800">
-              Total
-            </span>
-
-            <span className="text-2xl font-bold text-orange-600">
-              ₹{puja.price}
-            </span>
-          </div>
-
-        </div>
-
-        <button
-          onClick={handlePayment}
-          className="mt-8 w-full rounded-lg bg-orange-600 px-6 py-4 text-lg font-semibold text-white transition hover:bg-orange-700"
-        >
-          Pay ₹{puja.price}
-        </button>
-
-        <button
-          onClick={() => navigate(-1)}
-          className="mt-3 w-full rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition hover:bg-gray-50"
-        >
-          Go Back
-        </button>
+        </form>
 
       </div>
+
     </div>
   );
 }

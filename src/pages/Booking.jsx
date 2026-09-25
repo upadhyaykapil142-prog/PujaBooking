@@ -1,265 +1,268 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const pujas = [
-  {
-    id: 1,
-    name: "Ganesh Puja",
-    description:
-      "Lord Ganesha Puja for blessings, prosperity and removing obstacles.",
-    price: 5100,
-  },
-  {
-    id: 2,
-    name: "Satyanarayan Puja",
-    description:
-      "A traditional Puja performed for peace, prosperity and well-being.",
-    price: 6100,
-  },
-  {
-    id: 3,
-    name: "Griha Pravesh Puja",
-    description:
-      "Complete Puja ceremony for entering a new home.",
-    price: 5100,
-  },
-  {
-    id: 4,
-    name: "Mahamrityunjaya Jaap",
-    description:
-      "Traditional Jaap performed with proper Vedic rituals.",
-    price: 5100,
-  },
-  {
-    id: 5,
-    name: "Maha Mrityunjaya Havan",
-    description:
-      "Traditional Havan performed with Vedic rituals and sacred offerings.",
-    price: 5100,
-  },
-  {
-    id: 6,
-    name: "Navagraha Havan",
-    description:
-      "A traditional Havan performed for Navagraha worship and peace.",
-    price: 5100,
-  },
-  {
-    id: 7,
-    name: "Hanuman Puja",
-    description:
-      "Devotional Hanuman Puja performed with traditional rituals.",
-    price: 5100,
-  },
-  {
-    id: 8,
-    name: "Diwali Puja",
-    description:
-      "Traditional Diwali Puja dedicated to prosperity and auspiciousness.",
-    price: 7100,
-  },
-  {
-    id: 9,
-    name: "Durga Puja",
-    description:
-      "Traditional Maa Durga Puja performed with proper rituals.",
-    price: 5100,
-  },
-  {
-    id: 10,
-    name: "Navratri Puja",
-    description:
-      "Special Navratri Puja dedicated to Maa Durga and the Nav Durga.",
-    price: 7100,
-  },
-  {
-    id: 11,
-    name: "Shiv Puja",
-    description:
-      "Traditional Lord Shiva Puja performed with devotional rituals.",
-    price: 5100,
-  },
-  {
-    id: 12,
-    name: "Rudrabhishek",
-    description:
-      "Traditional Rudrabhishek of Lord Shiva performed with sacred offerings.",
-    price: 5100,
-  },
-  {
-    id: 13,
-    name: "Shivling Abhishek",
-    description:
-      "Sacred Abhishek of Shivling performed according to traditional rituals.",
-    price: 5100,
-  },
-  {
-    id: 14,
-    name: "Vastu Shanti Puja",
-    description:
-      "Traditional Vastu Shanti Puja for a peaceful and auspicious home.",
-    price: 5100,
-  },
-  {
-    id: 15,
-    name: "Navagraha Shanti",
-    description:
-      "Traditional Navagraha Shanti Puja performed with Vedic rituals.",
-    price: 5100,
-  },
+  { id: 1, name: "Ganesh Puja", price: 5100 },
+  { id: 2, name: "Satyanarayan Puja", price: 6100 },
+  { id: 3, name: "Griha Pravesh Puja", price: 5100 },
+  { id: 4, name: "Mahamrityunjaya Jaap", price: 5100 },
+  { id: 5, name: "Maha Mrityunjaya Havan", price: 5100 },
+  { id: 6, name: "Navagraha Havan", price: 5100 },
+  { id: 7, name: "Hanuman Puja", price: 5100 },
+  { id: 8, name: "Diwali Puja", price: 7100 },
+  { id: 9, name: "Durga Puja", price: 5100 },
+  { id: 10, name: "Navratri Puja", price: 7100 },
+  { id: 11, name: "Shiv Puja", price: 5100 },
+  { id: 12, name: "Rudrabhishek", price: 5100 },
+  { id: 13, name: "Shivling Abhishek", price: 5100 },
+  { id: 14, name: "Vastu Shanti Puja", price: 5100 },
+  { id: 15, name: "Navagraha Shanti", price: 5100 },
+];
+
+const months = [
+  { value: "01", label: "January" },
+  { value: "02", label: "February" },
+  { value: "03", label: "March" },
+  { value: "04", label: "April" },
+  { value: "05", label: "May" },
+  { value: "06", label: "June" },
+  { value: "07", label: "July" },
+  { value: "08", label: "August" },
+  { value: "09", label: "September" },
+  { value: "10", label: "October" },
+  { value: "11", label: "November" },
+  { value: "12", label: "December" },
+];
+
+const times = [
+  { value: "06:00", label: "06:00 AM" },
+  { value: "07:00", label: "07:00 AM" },
+  { value: "08:00", label: "08:00 AM" },
+  { value: "09:00", label: "09:00 AM" },
+  { value: "10:00", label: "10:00 AM" },
+  { value: "11:00", label: "11:00 AM" },
+  { value: "12:00", label: "12:00 PM" },
+  { value: "13:00", label: "01:00 PM" },
+  { value: "14:00", label: "02:00 PM" },
+  { value: "15:00", label: "03:00 PM" },
+  { value: "16:00", label: "04:00 PM" },
+  { value: "17:00", label: "05:00 PM" },
+  { value: "18:00", label: "06:00 PM" },
+  { value: "19:00", label: "07:00 PM" },
+  { value: "20:00", label: "08:00 PM" },
 ];
 
 function Booking() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const puja = pujas.find((item) => item.id === Number(id));
+  const [puja, setPuja] = useState(null);
 
-  const currentYear = new Date().getFullYear();
+  const today = new Date();
 
-  const [formData, setFormData] = useState({
-    day: "",
-    month: "",
-    year: "",
-    time: "",
-    name: "",
-    mobile: "",
-  });
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
 
+  const [time, setTime] = useState("");
   const [error, setError] = useState("");
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+  const currentDay = today.getDate();
 
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
+  const years = [
+    currentYear,
+    currentYear + 1,
+    currentYear + 2,
+  ];
 
+  const days = Array.from(
+    { length: 31 },
+    (_, index) => index + 1
+  );
+
+  useEffect(() => {
+    const pujaId = Number(id);
+
+    const selectedPuja = pujas.find(
+      (item) => item.id === pujaId
+    );
+
+    if (selectedPuja) {
+      setPuja(selectedPuja);
+    } else {
+      setPuja(null);
+    }
+  }, [id]);
+
+  const handleDayChange = (event) => {
+    setDay(event.target.value);
     setError("");
+  };
+
+  const handleMonthChange = (event) => {
+    setMonth(event.target.value);
+    setError("");
+  };
+
+  const handleYearChange = (event) => {
+    setYear(event.target.value);
+    setError("");
+  };
+
+  const handleTimeChange = (event) => {
+    setTime(event.target.value);
+    setError("");
+  };
+
+  const getBookingDate = () => {
+    if (!day || !month || !year) {
+      return "";
+    }
+
+    return `${year}-${month}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
+  const validateDate = () => {
+    if (!day || !month || !year) {
+      return false;
+    }
+
+    const selectedDay = Number(day);
+    const selectedMonth = Number(month);
+    const selectedYear = Number(year);
+
+    const selectedDate = new Date(
+      selectedYear,
+      selectedMonth - 1,
+      selectedDay
+    );
+
+    if (
+      selectedDate.getFullYear() !== selectedYear ||
+      selectedDate.getMonth() !== selectedMonth - 1 ||
+      selectedDate.getDate() !== selectedDay
+    ) {
+      return false;
+    }
+
+    const selectedTime = selectedDate.getTime();
+
+    const todayOnly = new Date(
+      currentYear,
+      currentMonth - 1,
+      currentDay
+    ).getTime();
+
+    return selectedTime >= todayOnly;
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!formData.day) {
-      setError("Please select the Puja day.");
+    setError("");
+
+    if (!day || !month || !year) {
+      setError("Please select a booking date.");
       return;
     }
 
-    if (!formData.month) {
-      setError("Please select the Puja month.");
+    if (!validateDate()) {
+      setError(
+        "Please select today or a future date."
+      );
       return;
     }
 
-    if (!formData.year) {
-      setError("Please select the Puja year.");
+    if (!time) {
+      setError("Please select a booking time.");
       return;
     }
 
-    if (!formData.time) {
-      setError("Please select a Puja time.");
+    if (!puja) {
+      setError(
+        "Puja information not found. Please start again."
+      );
       return;
     }
 
-    if (!formData.name.trim()) {
-      setError("Please enter your name.");
-      return;
-    }
-
-    if (!/^[0-9]{10}$/.test(formData.mobile)) {
-      setError("Please enter a valid 10-digit mobile number.");
-      return;
-    }
-
-    // Create date safely as YYYY-MM-DD.
-    const selectedDate = `${formData.year}-${String(
-      formData.month
-    ).padStart(2, "0")}-${String(formData.day).padStart(2, "0")}`;
-
-    // Validate that the selected date is real.
-    const dateObject = new Date(
-      Number(formData.year),
-      Number(formData.month) - 1,
-      Number(formData.day)
-    );
-
-    if (
-      dateObject.getFullYear() !== Number(formData.year) ||
-      dateObject.getMonth() !== Number(formData.month) - 1 ||
-      dateObject.getDate() !== Number(formData.day)
-    ) {
-      setError("Please select a valid calendar date.");
-      return;
-    }
-
-    // Validate date is not in the past.
-    const today = new Date();
-
-    today.setHours(0, 0, 0, 0);
-    dateObject.setHours(0, 0, 0, 0);
-
-    if (dateObject < today) {
-      setError("Puja date cannot be in the past.");
-      return;
-    }
+    const bookingDate = getBookingDate();
 
     const bookingData = {
       pujaId: puja.id,
       pujaName: puja.name,
       price: puja.price,
-      date: selectedDate,
-      time: formData.time,
-      name: formData.name.trim(),
-      mobile: formData.mobile,
+      date: bookingDate,
+      time: time,
     };
 
-    console.log("================================");
-    console.log("FINAL DATE:", selectedDate);
-    console.log("BOOKING DATA:", bookingData);
-    console.log("================================");
+    console.log(
+      "FINAL BOOKING DATA:",
+      bookingData
+    );
 
     localStorage.setItem(
       "pujaBooking",
       JSON.stringify(bookingData)
     );
 
-    navigate(`/booking/${id}/yajman`);
+    navigate(
+      `/booking/${puja.id}/yajman`
+    );
   };
 
   if (!puja) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-orange-50">
-        <h1 className="text-2xl font-bold text-red-600">
-          Puja not found
-        </h1>
+      <div className="flex min-h-screen items-center justify-center bg-orange-50 px-6">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+          <div className="text-5xl">⚠️</div>
+
+          <h1 className="mt-4 text-2xl font-bold text-red-600">
+            Puja Not Found
+          </h1>
+
+          <p className="mt-3 text-gray-600">
+            The selected Puja could not be found.
+          </p>
+
+          <button
+            onClick={() => navigate("/pujas")}
+            className="mt-6 rounded-lg bg-orange-600 px-6 py-3 font-semibold text-white hover:bg-orange-700"
+          >
+            Back to Pujas
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-orange-50 px-6 py-12">
-      <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-lg">
+      <div className="mx-auto max-w-2xl rounded-2xl bg-white p-8 shadow-lg">
 
-        {/* Header */}
+        {/* HEADER */}
+
         <div className="text-center">
-          <div className="text-5xl">
-            🛕
-          </div>
+          <div className="text-5xl">🙏</div>
 
           <h1 className="mt-4 text-3xl font-bold text-orange-800">
             Book {puja.name}
           </h1>
 
           <p className="mt-3 text-gray-600">
-            {puja.description}
+            Select your preferred date and time.
           </p>
         </div>
 
-        {/* Price */}
-        <div className="mt-8 rounded-xl bg-orange-50 p-6">
+        {/* PRICE */}
+
+        <div className="mt-8 rounded-xl bg-orange-50 p-5 text-center">
           <p className="text-sm text-gray-500">
-            Starting Price
+            Puja Price
           </p>
 
           <p className="mt-1 text-3xl font-bold text-orange-600">
@@ -267,156 +270,134 @@ function Booking() {
           </p>
         </div>
 
-        {/* Form */}
+        {/* FORM */}
+
         <form
           onSubmit={handleSubmit}
           className="mt-8"
         >
 
-          {/* Date */}
+          {/* DATE */}
+
           <div>
             <label className="block font-semibold text-gray-700">
-              Select Puja Date
+              Booking Date
             </label>
 
             <div className="mt-2 grid grid-cols-3 gap-3">
 
-              {/* Day */}
+              {/* DAY */}
+
               <select
-                name="day"
-                value={formData.day}
-                onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500"
+                value={day}
+                onChange={handleDayChange}
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
               >
                 <option value="">
                   Day
                 </option>
 
-                {Array.from({ length: 31 }, (_, index) => {
-                  const day = index + 1;
-
-                  return (
-                    <option key={day} value={day}>
-                      {String(day).padStart(2, "0")}
-                    </option>
-                  );
-                })}
+                {days.map((item) => (
+                  <option
+                    key={item}
+                    value={item}
+                  >
+                    {String(item).padStart(2, "0")}
+                  </option>
+                ))}
               </select>
 
-              {/* Month */}
+              {/* MONTH */}
+
               <select
-                name="month"
-                value={formData.month}
-                onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500"
+                value={month}
+                onChange={handleMonthChange}
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
               >
                 <option value="">
                   Month
                 </option>
 
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
+                {months.map((item) => (
+                  <option
+                    key={item.value}
+                    value={item.value}
+                  >
+                    {item.label}
+                  </option>
+                ))}
               </select>
 
-              {/* Year */}
+              {/* YEAR */}
+
               <select
-                name="year"
-                value={formData.year}
-                onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500"
+                value={year}
+                onChange={handleYearChange}
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
               >
                 <option value="">
                   Year
                 </option>
 
-                {Array.from(
-                  { length: 11 },
-                  (_, index) => currentYear + index
-                ).map((year) => (
-                  <option key={year} value={year}>
-                    {year}
+                {years.map((item) => (
+                  <option
+                    key={item}
+                    value={item}
+                  >
+                    {item}
                   </option>
                 ))}
               </select>
+
             </div>
 
             <p className="mt-2 text-sm text-gray-500">
-              Select Day, Month and Year.
+              Select today or any future date.
             </p>
           </div>
 
-          {/* Time */}
+          {/* TIME */}
+
           <div className="mt-6">
             <label className="block font-semibold text-gray-700">
-              Select Puja Time
+              Booking Time
             </label>
 
-            <input
-              type="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500"
-            />
+            <select
+              value={time}
+              onChange={handleTimeChange}
+              className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+            >
+              <option value="">
+                Select time
+              </option>
+
+              {times.map((item) => (
+                <option
+                  key={item.value}
+                  value={item.value}
+                >
+                  {item.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Name */}
-          <div className="mt-6">
-            <label className="block font-semibold text-gray-700">
-              Your Name
-            </label>
+          {/* ERROR */}
 
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500"
-            />
-          </div>
-
-          {/* Mobile */}
-          <div className="mt-6">
-            <label className="block font-semibold text-gray-700">
-              Mobile Number
-            </label>
-
-            <input
-              type="tel"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              placeholder="Enter 10-digit mobile number"
-              maxLength="10"
-              inputMode="numeric"
-              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-orange-500"
-            />
-          </div>
-
-          {/* Error */}
           {error && (
-            <div className="mt-6 rounded-lg bg-red-50 p-4 text-sm font-medium text-red-600">
+            <div className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-600">
               {error}
             </div>
           )}
 
-          {/* Submit */}
+          {/* SUBMIT */}
+
           <button
             type="submit"
             className="mt-8 w-full rounded-lg bg-orange-600 px-6 py-3 font-semibold text-white transition hover:bg-orange-700"
           >
-            Continue Booking
+            Continue to Yajman Details
           </button>
 
         </form>
