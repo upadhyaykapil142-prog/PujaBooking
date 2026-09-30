@@ -73,7 +73,7 @@ function Payment() {
       setLoading(true);
 
       const response = await fetch(
-        `http://localhost:5000/api/bookings/${bookingId}/payment`,
+        `https://pujabooking-server.onrender.com/api/bookings/${bookingId}/payment`,
         {
           method: "PATCH",
 

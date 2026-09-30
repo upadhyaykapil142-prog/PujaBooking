@@ -7,9 +7,14 @@ function Navbar() {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const response = await fetch("http://localhost:5000/auth/me", {
-          credentials: "include",
-        });
+  const API_URL = "https://pujabooking-server.onrender.com";
+
+  const response = await fetch(
+    `${API_URL}/auth/me`,
+    {
+      credentials: "include",
+    }
+  );
 
         if (response.ok) {
           const data = await response.json();
@@ -29,7 +34,7 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    window.location.href = "http://localhost:5000/auth/logout";
+    window.location.href = "https://pujabooking-server.onrender.com/auth/logout";
   };
 
   return (

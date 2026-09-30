@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://pujabooking-server.onrender.com";
 
 function PanditDashboard() {
   const [bookings, setBookings] = useState([]);
