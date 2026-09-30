@@ -254,7 +254,7 @@ function Home() {
 
 
           /* =====================================================
-             TRISHUL GLOW
+             FULL TRISHUL
           ====================================================== */
 
           @keyframes fullTrishulGlow {
@@ -690,6 +690,222 @@ function Home() {
               animation: none;
             }
           }
+
+
+          /* =====================================================
+             RESPONSIVE ADDITIONS
+             Existing JSX, content, API logic, routes and design
+             are preserved. These rules only improve fitting on
+             phones and tablets.
+          ====================================================== */
+
+          html,
+          body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+
+          #root {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+          }
+
+          @media (max-width: 640px) {
+            nav > div {
+              width: 100%;
+              padding-left: 1rem !important;
+              padding-right: 1rem !important;
+              padding-top: 0.75rem !important;
+              padding-bottom: 0.75rem !important;
+              gap: 0.75rem !important;
+            }
+
+            nav > div > a:first-child {
+              width: 100%;
+              text-align: center;
+              font-size: 1.25rem !important;
+            }
+
+            nav > div > div {
+              width: 100%;
+              justify-content: center;
+              gap: 0.75rem !important;
+              font-size: 0.875rem !important;
+            }
+
+            nav > div > div a,
+            nav > div > div button {
+              white-space: nowrap;
+            }
+
+            nav + section > div {
+              padding-left: 0.75rem !important;
+              padding-right: 0.75rem !important;
+              padding-top: 1.5rem !important;
+              padding-bottom: 2.5rem !important;
+            }
+
+            nav + section > div > div:first-child > div:last-child {
+              gap: 0.5rem !important;
+              max-width: 100%;
+            }
+
+            nav + section > div > div:first-child > div:last-child > div {
+              flex-shrink: 1;
+              min-width: 0;
+            }
+
+            nav + section > div > div:first-child > div:last-child > div:nth-child(2) span {
+              font-size: clamp(4.75rem, 25vw, 6.25rem) !important;
+            }
+
+            nav + section > div > div:first-child > div:last-child > div:nth-child(2) > div {
+              width: clamp(5rem, 23vw, 8rem) !important;
+              height: clamp(5rem, 23vw, 8rem) !important;
+            }
+
+            nav + section h1 {
+              font-size: clamp(2rem, 10vw, 3rem) !important;
+              line-height: 1.1 !important;
+              overflow-wrap: anywhere;
+            }
+
+            nav + section h1 + p {
+              font-size: clamp(0.95rem, 4vw, 1.25rem) !important;
+              letter-spacing: 0.12em !important;
+              line-height: 1.6 !important;
+            }
+
+            nav + section h2 {
+              max-width: 100%;
+            }
+
+            nav + section > div > div:nth-of-type(4) {
+              width: 100%;
+            }
+
+            nav + section > div > div:nth-of-type(4) > div {
+              max-width: 100%;
+              padding-left: 1rem !important;
+              padding-right: 1rem !important;
+              border-radius: 1rem !important;
+            }
+
+            nav + section > div > div:nth-of-type(4) h2 {
+              font-size: 1rem !important;
+              line-height: 1.5 !important;
+              overflow-wrap: anywhere;
+            }
+
+            nav + section img {
+              max-width: 100%;
+              height: auto;
+            }
+
+            nav + section > div > div:nth-of-type(6) > div {
+              padding-left: 1rem !important;
+              padding-right: 1rem !important;
+            }
+
+            nav + section > div > div:nth-of-type(6) h2 {
+              font-size: clamp(1.6rem, 7vw, 2.25rem) !important;
+              overflow-wrap: anywhere;
+            }
+
+            nav + section a[class*="rounded-full"] {
+              max-width: 100%;
+              white-space: normal;
+              text-align: center;
+            }
+
+            nav ~ section {
+              min-width: 0;
+            }
+
+            nav ~ section > div {
+              min-width: 0;
+              max-width: 100%;
+            }
+
+            nav ~ section h2,
+            nav ~ section h3,
+            nav ~ section p {
+              overflow-wrap: anywhere;
+            }
+
+            nav ~ section h2[class*="whitespace-nowrap"] {
+              white-space: normal !important;
+              line-height: 1.25 !important;
+            }
+
+            nav ~ section a,
+            nav ~ section button {
+              max-width: 100%;
+            }
+
+            footer {
+              min-width: 0;
+            }
+
+            footer p,
+            footer a {
+              overflow-wrap: anywhere;
+            }
+          }
+
+          @media (max-width: 400px) {
+            nav > div > div {
+              gap: 0.5rem !important;
+            }
+
+            nav > div > div a,
+            nav > div > div button {
+              font-size: 0.8rem !important;
+            }
+
+            nav + section > div > div:first-child > div:last-child {
+              gap: 0.25rem !important;
+            }
+
+            nav + section > div > div:first-child > div:last-child > div:first-child > div,
+            nav + section > div > div:first-child > div:last-child > div:last-child > div {
+              font-size: 1.25rem !important;
+            }
+
+            nav + section > div > div:nth-of-type(3) {
+              font-size: 0.9rem;
+            }
+
+            nav + section > div > div:nth-of-type(4) > div {
+              padding-top: 0.75rem !important;
+              padding-bottom: 0.75rem !important;
+            }
+          }
+
+          @media (min-width: 641px) and (max-width: 1024px) {
+            nav > div {
+              padding-left: 1.5rem !important;
+              padding-right: 1.5rem !important;
+            }
+
+            nav + section > div {
+              padding-left: 1.5rem !important;
+              padding-right: 1.5rem !important;
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+              scroll-behavior: auto !important;
+              animation-duration: 0.01ms !important;
+              animation-iteration-count: 1 !important;
+              transition-duration: 0.01ms !important;
+            }
+          }
         `}
       </style>
 
@@ -814,40 +1030,42 @@ function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,177,0,0.22),_transparent_58%)]" />
 
 
-        <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
+        <div className="relative mx-auto max-w-7xl px-3 py-8 sm:px-6 sm:py-16">
 
 
           {/* =================================================
-              TRISHUL + SHUBH + OM + LABH
+              FULL TRISHUL + SHUBH + OM + LABH
           ================================================== */}
 
           <div className="relative flex items-center justify-center">
 
 
-            {/* LEFT TRISHUL */}
+            {/* LEFT FULL TRISHUL */}
 
             <div className="pointer-events-none absolute left-8 top-1/2 z-10 hidden -translate-y-1/2 lg:block xl:left-16">
 
-              <div className="trishul-full-glow">
+              <div className="trishul-full-glow flex flex-col items-center">
 
                 <div className="text-6xl text-amber-300 xl:text-7xl">
                   🔱
                 </div>
+
 
               </div>
 
             </div>
 
 
-            {/* RIGHT TRISHUL */}
+            {/* RIGHT FULL TRISHUL */}
 
             <div className="pointer-events-none absolute right-8 top-1/2 z-10 hidden -translate-y-1/2 lg:block xl:right-16">
 
-              <div className="trishul-full-glow-delay">
+              <div className="trishul-full-glow-delay flex flex-col items-center">
 
                 <div className="text-6xl text-amber-300 xl:text-7xl">
                   🔱
                 </div>
+
 
               </div>
 
@@ -856,7 +1074,7 @@ function Home() {
 
             {/* SHUBH - OM - LABH */}
 
-            <div className="flex items-center justify-center gap-16 sm:gap-28 lg:gap-40">
+            <div className="flex items-center justify-center gap-5 sm:gap-16 md:gap-28 lg:gap-40">
 
 
               {/* SHUBH */}

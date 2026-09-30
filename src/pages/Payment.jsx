@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+import naviQr from "../assets/navi-qr.png";
+
 function Payment() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -139,6 +141,7 @@ function Payment() {
   if (!bookingData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-orange-50 px-6">
+
         <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
 
           <div className="text-5xl">
@@ -164,6 +167,7 @@ function Payment() {
           </button>
 
         </div>
+
       </div>
     );
   }
@@ -203,6 +207,7 @@ function Payment() {
           <div className="mt-3 space-y-3">
 
             <div className="flex justify-between gap-4">
+
               <span className="text-gray-600">
                 Puja
               </span>
@@ -210,9 +215,11 @@ function Payment() {
               <span className="font-semibold text-gray-800">
                 {bookingData.pujaName}
               </span>
+
             </div>
 
             <div className="flex justify-between gap-4">
+
               <span className="text-gray-600">
                 Date
               </span>
@@ -220,9 +227,11 @@ function Payment() {
               <span className="font-semibold text-gray-800">
                 {bookingData.date}
               </span>
+
             </div>
 
             <div className="flex justify-between gap-4">
+
               <span className="text-gray-600">
                 Time
               </span>
@@ -230,6 +239,7 @@ function Payment() {
               <span className="font-semibold text-gray-800">
                 {bookingData.time}
               </span>
+
             </div>
 
             <div className="flex justify-between gap-4 border-t pt-3">
@@ -262,6 +272,8 @@ function Payment() {
             PujaBooking.
           </p>
 
+          {/* AMOUNT TO PAY */}
+
           <div className="mt-4 rounded-lg bg-white p-4">
 
             <p className="text-sm text-gray-500">
@@ -271,6 +283,43 @@ function Payment() {
             <p className="mt-1 text-2xl font-bold text-orange-600">
               ₹{bookingData.price}
             </p>
+
+          </div>
+
+          {/* NAVI QR CODE */}
+
+          <div className="mt-6 rounded-xl border-2 border-orange-300 bg-gradient-to-br from-orange-50 via-white to-yellow-50 p-5 text-center shadow-md">
+
+            <h3 className="text-xl font-bold text-orange-800">
+              Scan & Pay
+            </h3>
+
+            <p className="mt-2 text-sm text-gray-600">
+              Scan the QR code using your UPI app
+              to complete the payment.
+            </p>
+
+            <div className="mt-5 flex justify-center">
+
+              <div className="rounded-2xl border-4 border-orange-400 bg-white p-3 shadow-lg">
+
+                <img
+                  src={naviQr}
+                  alt="Navi UPI QR Code"
+                  className="h-64 w-64 rounded-lg object-contain"
+                />
+
+              </div>
+
+            </div>
+
+            <div className="mt-4 inline-block rounded-full bg-orange-100 px-5 py-2">
+
+              <p className="text-sm font-bold text-orange-700">
+                Pay ₹{bookingData.price}
+              </p>
+
+            </div>
 
           </div>
 
@@ -315,9 +364,11 @@ function Payment() {
           {/* ERROR */}
 
           {error && (
+
             <div className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-600">
               {error}
             </div>
+
           )}
 
           {/* SUBMIT */}
